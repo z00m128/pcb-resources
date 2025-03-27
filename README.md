@@ -10,4 +10,4 @@ A clone of the ZX Spectrum computer manufactured by the Slovak company Didaktik 
 ## Lamac CPM
 A board used to modify a ZX Spectrum computer to expand memory (80k-256k) for use with CP/M. It was common modification in former Czechoslovakia, well documented in local electronics magazine. This circuit board was not vertified yet.
 
-The materials are freely available. The production of these printed circuit boards for profit is strictly prohibited. See license.
+The materials are freely available. The production of these printed circuit boards for profit is strictly prohibited. See [license](LICENSE.md).
