@@ -9,6 +9,10 @@ A clone of the ZX Spectrum computer manufactured by the Slovak company Didaktik 
 A clone of the ZX Spectrum computer manufactured by the Slovak company Didaktik v.d. in the early 1990s. This clone is actually a Didaktik M with a built-in D80 disk system running the MDOS operating system. The recreated PCB has been verified and is functional.
 ![](https://github.com/z00m128/pcb-resources/blob/main/Didaktik-Kompakt-ver23/Didaktik-Kompakt-ver23-top.png)
 
+## KeyFace
+A PS/2 keyboard interface for ZX Spectrum, internal and external versions. Both were developed by MDV in late 90's for Kompakt Servis company. Both PCBs are verified and working.
+![](https://github.com/z00m128/pcb-resources/blob/main/KeyFace/KeyFace-populated.jpg)
+
 ## Lamac CPM
 A board used to modify a ZX Spectrum computer to expand memory (80k-256k) for use with CP/M. It was common modification in former Czechoslovakia, well documented in local electronics magazine. This PCB was not vertified yet.
 ![](https://github.com/z00m128/pcb-resources/blob/main/Lamac-CPM/cpm-top.jpg)
