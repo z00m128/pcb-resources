@@ -1,0 +1,123 @@
+
+(rules PCB Melodik2
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 11)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.1)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.9)
+    )
+  )
+  (rule
+    (width 250.0)
+    (clear 200.0)
+    (clear 125.0 (type smd_to_turn_gap))
+    (clear 50.0 (type smd-smd))
+  )
+  (padstack "Via[0-1]_700:350_um"
+    (shape
+      (circle F.Cu 700.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 700.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1000:500_um"
+    (shape
+      (circle F.Cu 1000.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1000.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_700:350_um" "Via[0-1]_700:350_um" default
+  )
+  (via 
+    "Via[0-1]_1000:500_um" "Via[0-1]_1000:500_um" default
+  )
+  (via 
+    "Via[0-1]_700:350_um-kicad_default" "Via[0-1]_700:350_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1000:500_um-kicad_default" "Via[0-1]_1000:500_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_700:350_um-Power" "Via[0-1]_700:350_um" Power
+  )
+  (via 
+    "Via[0-1]_1000:500_um-Power" "Via[0-1]_1000:500_um" Power
+  )
+  (via_rule
+    default "Via[0-1]_700:350_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_700:350_um-kicad_default"
+  )
+  (via_rule
+    Power "Via[0-1]_1000:500_um-Power"
+  )
+  (class default
+    /A0 /A1 /A10 /A11 /A12 /A13 /A14 /A15
+    /A2 /A3 /A4 /A5 /A6 /A7 /A8 /A9
+    /D0 /D1 /D2 /D3 /D4 /D5 /D6 /D7
+    /U /V /VIDEO "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(C2-Pad1)" "Net-(C3-Pad1)" "Net-(C4-Pad1)"
+    "Net-(C5-Pad1)" "Net-(C5-Pad2)" "Net-(C6-Pad1)" "Net-(L1-Pad2)" "Net-(P3-Pad1)" "Net-(P3-Pad2)" "Net-(P3-Pad3)" "Net-(P3-Pad4)"
+    "Net-(P3-Pad5)" "Net-(P3-Pad6)" "Net-(P3-Pad7)" "Net-(P3-Pad8)" "Net-(P6-Pad2)" "Net-(R1-Pad1)" "Net-(R2-Pad2)" "Net-(U2-Pad10)"
+    "Net-(U2-Pad11)" "Net-(U2-Pad12)" "Net-(U3-Pad1)" "Net-(U3-Pad13)" "Net-(U3-Pad10)" "Net-(U5-Pad2)" /NC1 "CHN_C"
+    "CHN_B" "CHN_A" "unconnected-(U1-Pad2)" AYCLK /~{RESET} BDIR BC1 /~{WR}
+    /~{RD} /~{IORQ} "unconnected-(U2-Pad7)" "unconnected-(U2-Pad9)" "unconnected-(U2-Pad13)" "unconnected-(U2-Pad14)" "unconnected-(U2-Pad15)" "unconnected-(U3-Pad4)"
+    "unconnected-(U5-Pad8)" "unconnected-(U5-Pad9)" "unconnected-(U5-Pad10)" "unconnected-(U5-Pad11)" "unconnected-(U5-Pad12)" "unconnected-(U5-Pad13)" "unconnected-(U6-Pad1)" "unconnected-(U6-Pad7)"
+    "unconnected-(U6-Pad8)" /L /R /LO /RO "Net-(L2-Pad1)" /~{CLKCPU} /~{IORQULA}
+    /~{Y} /~{BUSRQ} /~{ROMCS} /~{BUSACK} /~{INT} /~{NMI} /~{HALT} /~{MREQ}
+    /~{WAIT} /~{M1} /~{RFSH} /NC2
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    (clearance_class "kicad_default")
+    (via_rule "kicad_default")
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class Power
+    /+12V /+9V "/-5V" /12VAC GND VCC
+    (clearance_class Power)
+    (via_rule Power)
+    (rule
+      (width 1000.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)

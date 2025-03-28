@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "Melodik2-rescue")(type "Legacy")(uri "${KIPRJMOD}/Melodik2-rescue.lib")(options "")(descr ""))
+)
