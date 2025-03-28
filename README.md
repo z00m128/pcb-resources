@@ -29,6 +29,13 @@ Hardware modification for PMD85 computer. It extends its capabilities and allows
 PS/2 keyboard interface for PMD85 computer. This is my own iteration of PCB. It was not verified yet.
 ![](https://github.com/z00m128/pcb-resources/blob/main/PMD-KeyFace/pmd-keyface-2021.png)
 
+## [Kicad libraries](https://github.com/z00m128/pcb-resources/tree/main/KiCad-libs)
+Set of libraries for KiCad 6.0 and newer that you may need if you want to edit some of my projects.
+
+_GAL20V8, GAL22V10, AY-3-8912, AY-3-8910, ZX Spectrum expansion connector._
+
+---
+
 ## NOTICE
 The production of these printed circuit boards for profit is strictly prohibited. See [license](LICENSE.md).
 
