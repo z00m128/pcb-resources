@@ -1,0 +1,306 @@
+1.KEYFACE- OPIS INTERFACE
+-----------------------------------
+
+Klavesnicovy interface je zariadenie umoznujuce pripojenie klavesnice z pocitacov 
+PC/XT (XT-verzia) a PC/AT (AT-verzia). Pripojenie klavesnice tohoto typu zvysuje 
+komfort obsluhy pocitaca. Klavesnice pocitacov PC maju ergonomicke rozlozenie 
+klaves. Pouzivanie takejto klavesnice u pocitaca DIDAKTIK (ZX-Spectrum,GAMA) ma 
+vyhodu aj vtom, ze uzivatel ziska navyk na profesionalne rozlozenie klaves a pri 
+prechode na vykonnejsiu techniku nebude mat problemy s prstokladom. Okrem zakladnej 
+funkcie interface, ktorou transformacia znakov z klavesnice PC do klavesnice 
+ZX-Spectra umoznuje aj ine specialne funkcie:
+
+- simulaciu SINCLAIR JOYSTICK-u na kurzorovych klavesach
+- programovatelne klavesy
+- SCAN rezim
+- RESET pocitaca
+- Generovanie NMI
+
+
+
+2.KEYFACE - FUNKCIE KLAVES
+-----------------------------------
+
+Klavesa:          ZX kombinacia:                 Pozn:
+
+ESC               CS+SPACE                       Nuluje celu maticu
+F1                CS+1         EDIT              Prog.0
+F2                CS+2         CAPS              Prog.1
+F3                CS+3         T.VIDEO           Prog.2
+F4                CS+4         I.VIDEO           Prog.3
+F5                EXT,SS+9     CAT               Prog.4
+F6                EXT,SS+6     MOVE              Prog.5
+F7                EXT,SS+7     ERASE             Prog.6
+F8                EXT,SS+0     FORMAT            Prog.7
+INS               CS+9         GRAPH             Prog.8
+DEL               CS+0         DELETE            Prog.9
+HOME              SS+Q         <=                Prog.10
+END               SS+E         =>                Prog.1l
+PGUP              CS+3         T.VIDEO           Prog.12
+PGDW              CS+4         I.VIDEO           Prog.13
+TAB               CS+l         EDIT
+CAPS_LOCK         CS+2         CAPS_LOCK
+SHIFT             CS           CAPS_SHIFT
+ALT               SS           SYMBOL_SHIFT
+BS                CS+0         DELETE
+
+
+Joytick mod OFF:
+----------------
+Klavesa:          ZX kombinacia:
+
+CTRL              CS+SS        EXT_MOD
+CURR_UP           CS+7         UP
+CURR_DW           CS+6         DOWN
+CURR_LF           CS+5         LEFT
+CURR_RG           CS+8         RIGHT
+
+
+Joystick mod ON:
+----------------
+Klavesa:          ZX kombinacia:
+
+CTRL              0            FIRE
+CURR_UP           8            UP
+CURR_DW           9            DOWN
+CURR_LF           6            LEFT
+CURR_RG           7            RIGHT
+
+
+Specialne kombinacie:
+---------------------
+
+NUM Lock          -     Prepinanie funkcie numerickeho bloku
+
+CTRL+ALT+DEL      -     RESET pocitaca nuluje maticu
+CTRL+ALT+ESC      -     RESET klavesnice
+ALT+PRINT_Screen  -     Aktivacia NMI
+
+SH+Fl0            -     0..9 Mod AT           KONE=0
+SH+F11            -     EXTEND mod ENABLE     EXTE=0
+SH+F12            -     Joystick OFF          SINE=0
+
+ALT+F10           -     0..9 MOd ZX           KONE=1
+ALT+F11           -     EXTEND mod DISABLE    EXTE=1
+ALT+F12           -     Joystick ON           SINE=1
+
+( Pri RESET-e klavesnice sa nastavi KONE=1, EXTE=O, SINE=O )
+
+
+3.KEYFACE - PROGRAMOVANIE
+----------------------------------
+
+Klavesnicovy adapter KEYFACE umoznuje programovo nastavit jeho vlastnosti. Jedna sa 
+hlavne o programovanie funkcnych klaves, rezimu prace, parametrov klavesnice 
+(AT verzia). Prenos dat sa uskutocnuje seriovo. Prikaz pre interface je realizovany 
+tolkym poctom zapisov na port klavesnice ( 0FAH ) kolko je ciselna hodnota prikazu. 
+Pri zapise na port nie su dolezite ake data sa odoslu. Napriklad treba odoslat 
+prikaz RESET KLAVESNICE co je 3FH t.j. treba odoslat seriu 63 impulzov na port 
+klavesnice. Mezdi jednotlivymi impulzami smie byt maximalna pauza lOOus. Programova 
+realizacia moze potom vyzerat takto:
+
+        di
+        ld       b,PRIKAZ
+ loop   out      (0FAH),a
+        djnz     loop
+        ei
+
+Vzhladom na to, ze vykonanie prikazu trva ucitu dobu treba medzi vysielanie 
+jednotlivych prikazov vlozit pauzu. Jej minimalnu velkost najdete v nasledujucej 
+tabulke prikazov interface.
+
+Tabulka prikazov interface:
+---------------------------
+
+Nazov        Kodovanie                  Funkcia                       XT     Tp
+------------------------------------------------------------------------------------
+             D7 D6 D5 D4 D3 D2 Dl D0
+====================================================================================
+ACK          0  0  0  0  0  0  0  1     Potvrdenie prevzatia znaku    ANO    5ms   
+                                        vo SCAN rezime
+------------------------------------------------------------------------------------
+LED          0  0  0  0  1  C  N  S     Ovladanie LED diod na kla-    NIE    80ms
+                            |  |  |     vesnici.
+                 CAPS-LOCK --  |  |
+                  NUM-LOCK -----  |     1-svieti
+               SCROLL-LOCK --------     0-nesvieti
+------------------------------------------------------------------------------------
+SMOD         0  0  0  1  J  E  C  S     Nastavenie modu cinnosti.     ANO    l0ms
+                         |  |  |  |
+             JOYSTICK ON--  |  |  |
+              EXTEND OFF-----  |  |
+           KONVERZIA 0-9 OFF----  |
+                 SCAN ON-----------
+------------------------------------------------------------------------------------
+SKEY         0  0  1  0  K3 K2 K1 KO    Nastavenie programovatelnej   ANO    5ms
+                         |  |  |  |     klavesy K. Po poslani pri-
+              Klavesa -------------     kazu MUSI nasledovat cislo
+                                        ktore definuje novu funkciu
+             N7 N6 N5 N4 N3 N2 N1 N0    programovatelnej klavesy.
+             |  |  |  |  |  |  |  |
+             ----------|-----------
+                      KEY
+      ------------------------------------------------------------------------------
+           Tabulka kodov klaves:
+
+           CAPS-1   A-2   Q-3   1-4   0-5   P-6  ENT-7  SPACE-8
+              Z-9   S-10  W-11  2-12  9-13  O-14   L-15  SYMB-16
+              X-17  D-18  E-19  3-20  8-21  I-22   K-23     M-24
+              C-25  F-26  R-27  4-28  7-29  U-30   J-31     N-32
+              V-33  G-34  T-35  5-36  6-37  Y-38   H-39     B-40
+
+           Klavesa a CAPS SHIFT         kod+40
+                     SYMB SHIFT         kod+80
+                     EXT  mod           kod+120
+                     EXT + CAPS SHIFT   kod+160
+                     EXT + SYMB SHIFT   kod+200
+
+           Ziadna klavesa  kod - 255
+------------------------------------------------------------------------------------
+RES          0  0  1  1  1  1  1  1    Inicializacia klavesnice       ANO    2ms
+------------------------------------------------------------------------------------
+KEYP         0  1  Dl DO R3 R2 R1 R0   Nastavenie parametrov REPE-    NIE    8Oms
+                   |  |  |  |  |  |    AT a DELAY klavesnice.
+             DELAY-----  |  |  |  |
+             250ms 0  0  |  |  |  |
+             500ms 0  0  |  |  |  |
+             750ms 1  0  |  |  |  |
+               1s  1  1  |  |  |  |
+                         |  |  |  |
+             REPEAT----------------
+             0~30zn/sec, 15~2zn/sec
+4. KEYFACE - SCAN REZIM
+----------------------------------
+
+Tento rezim bol vytvoreny pre maximalne vyuzitie klavesnice XT (AT) v programoch, 
+ktore priamo budu pouzivat KEYFACE-INTERFACE. V tomto rezime klavesnica 
+netransformuje stlacenie klaves do matice ZX-Spectra, ale umoznuje citat cislo 
+stlacenej, alebo pustenej klavesy (SCAN kod). Takto mozno vyuzit vsetky klavesy 
+klavesnice v programe. V tomto rezime klavesnica pouziva vyrovnavaciu pamat klaves 
+(19 scan kodov), aby bolo mozne precitat aj rychlo stlacenu kombinaciu klaves. 
+Z tohoto dovodu sa po nastaveni SCAN modu definicia PROGRAMOVATELNYCH KLAVES a po 
+prepnuti do ZX modu sa definuje implicitne nastavenie.
+
+Prenos scan kodu prebieha nasledovne. Ak je buffri klavesnice pripraveny scan kod 
+tak sa "STLACI" klavesa Z (alebo X), co signalizuje pritomnost scan kodu. Scan kod 
+je pritomny na bite D7 portu 0FEh. Aktivacia jednotlivych bitov scan kodu sa robi 
+podobne ako prehladavanie klavesnice. Aktivaciou A8=0 A9-A15=l pri citani z portu 
+0FEh sa na D7 objavi bit0 scan kodu (inverzny). Ak A9=0 a ostatne =1 tak bit1 atd. 
+Po precitanl SCAN kodu t�eba potvrdit prevzatie kodu odoslanim prikazu ACK 
+(1 x OUT na 0FAh). Dalsi kod sa odosle a potvrdi "STLACENIM" X. To ze sa strieda 
+potvrdenie raz X a potom Z a potom X .... , je z dovodu toho, ze klavesnici istu 
+dobu trva, kym "PUSTI" potvrdenie a ak by vas program v tom, case cakal na novy 
+scan kod nacital by ten minuly, alebo nejaky nezmysel (Ak by sa prave menil).
+
+Po uvedeni do scan rezimu (Prikaz SMOD - 011h) sa uvolni st1acenie vsetkych klaves 
+a do buffra sa vlozi retazec idetifikujuci klavesnicu. Prve potvrdenie scan kodu 
+je "STLACENIM" Z.
+
+Identifikacny retazec ma strukturu: TYP,VERZIA_H,VERZIA_L,00
+Vsetky cis1a maju tvar 0Fx a nezhoduju sa zo ziadnym scan kodom klavesy.
+
+       Napr.: Klavesnica XT       0F0h,0Flh,0F0h,00    (V1.0)
+              Klavesnica AT       0Flh,0Flh,0F0h,00    (V1.0)
+
+Kod 00 na konci sekvencie znamena pretecenie buffra v pripade, ze program nestihne 
+preberat kody stlacenych klaves. Vtedy je vhodne, aby  program inicializoval svoje 
+premenne o stave SHIFT-ov a pod. Kedze pri prechode do scan rezimu tiez vznika 
+dovod na tuto inicializaciu, tak je na konci sekvencie aj kod 00.
+
+Pozn: Nulovanie Buffra mozno realizovat opatovnym nastavenim scan rezimu
+.pa
+
+Programova realizacia nacitania scan kodu moze byt realizovana nasledovne:
+(Program caka na prichod 1. scan kodu)
+Vracia scan kod v BC reg.
+
+ rsc    push   de
+        push   af
+ rsc0   ld     b,0              Time-out na akceptovanie ACK**
+        ld     a,0FEh           cakanie na Z, alebo X
+        in     a,(0FEh)
+        bit    1,a              Klavesa Z ?
+        ld     e,0
+        jr     z,rsc1           Ak ano skok
+        bit    2,a              Klavesa X ?
+        ld     e,1
+        jr     z,rsc1           Ak ano skok
+        jr     rsc0             Inak znova testuj ci uz prisie1 scan kod
+ ;
+ rsc1   ld     a,(last_k)       ocakavana klavesa potvrdenia
+        and    1
+        cp     e                Je to ocakavana klavesa potvrdenia scan ?
+        jr     z,rsc2           Ak ano skok
+        djnz   rsc0             Inak musi by ta ista po dobu time_out
+                                az potom ju mozno akceptovat
+        ld     a,e              klavesa potvrdenia
+ rsc2   xor    1                na buduce sa ocakava druha
+        ld     (last_k),a       zapamataj
+        ld     bc,0FEh          Nacitanie scan kodu
+ rsc3   in     a,(c)
+        rla
+        ccf                     inverzia
+        rr     d                7 bit uloz do 7 bitu D
+        scf
+        rl     b                rotacia masky
+        jr     c,rsc3           Ak nebolo vsetkych osem bitov znova
+ ;
+        ld     c,d              Scan kod do BC
+        ld     b,0
+        out    (0FAh),a         Prikaz ACK pre klavesnicu
+ ;
+        pop    af
+        pop    de
+        ret
+ ;
+
+
+.pa
+Tabulka SCAN kodov (pri pusteni sa generuje kod +80h):
+
+ HEX  DEC    ZNAK         HEX  DEC    ZNAK           HEX   DEC    ZNAK
+===============================================================================
+  00   0     Buff full     28  40     '"              50   80     NB2
+  01   1     ESC           29  41     '~              51   81     NB3
+  02   2     1!            2A  42     SHIFT-lavy      52   82     NB0
+  03   3     2@            2B  43     \|              53   83     NB.
+  04   4     3#            2C  44     Z               54   84     ALT+Print.SCR
+  05   5     4$            2D  45     X               55   85     PAUSE
+  06   6     5%            2E  46     C               56   86     <> (102 kl.)
+  07   7     6^            2F  47     V               57   87     F11
+  08   8     7&            30  48     B               58   88     F12
+  09   9     8*            31  49     N               59   89     INS
+  0A  10     9(            32  50     M               5A   90     DEL
+  08  11     0)            33  51     ,<              5B   91     HOME
+  0C  12     -_            34  52     .>              5C   92     END
+  0D  13     =+            35  53     /?              5D   93     PAGE UP
+  0E  14     BS            36  54     SHIFT-pravy     5E   94     PAGE DOWN
+  0F  15     TAB           37  55     NB* / Print.SCR 5F   95     CURR UP
+  10  16     Q             38  56     ALT             60   96     CURR DOWN
+  11  17     W             39  57     SPACE           61   97     CURR LEFT
+  12  18     E             3A  58     CAPS LOCK       62   98     CURR RIGHT
+  13  19     R             3B  59     F1              63   99     NB/
+  14  20     T             3C  60     F2              64  100     Print.SCR
+  15  21     Y             3D  61     F3              65  101     NB5**
+  16  22     U             3E  62     F4              66  102     CTRL+PAUSE
+  17  23     I             3F  63     F5
+  18  24     O             40  64     F6
+  19  25     p             41  65     F7
+  1A  26     [{            42  66     F8
+  lB  27     ]}            43  67     F9
+  1C  28     ENTER         44  68     F10
+  1D  29     CTRL          45  69     NUM LOCK
+  1E  30     A             46  70     SCROLL LOCK
+  1F  31     S             47  71     NB7
+  20  32     D             48  72     NB8
+  21  33     F             49  73     NB9
+  22  34     G             4A  74     NB-
+  23  35     H             4B  75     NB4	
+  24  36     J             4C  76     NB5
+  25  37     K             4D  77     NB6
+  26  38     L             4E  78     NB+
+  27  39     ;:            4F  79     NB1
+
+Pozn.: - NB oznacuje klavesu z numerickeho bloku
+    ** - Scan kody klaves numerickeho bloku sa pri NUM_LOCK=OFF automaticky 
+         konvertuju do kodov INS,DEL,... Klavesa NB5 sa konvertuje do kodu 66h.

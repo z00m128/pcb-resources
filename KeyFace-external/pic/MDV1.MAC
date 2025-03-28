@@ -1,0 +1,251 @@
+	LIST
+;***** Makra z MDV1
+	NOLIST
+;
+; Porovnanie F s cislom N (rozlisi aj < >)
+; F=N   Z,C
+; F<N	NZ,NC
+; F>N	NZ,C
+;
+cpi	macro	F,N
+	movlw	N
+	subwf	F,w
+	endm
+;
+; Porovnanie F s registrom R (rozlisi aj < >)
+; F=N   Z,C
+; F<N	NZ,NC
+; F>N	NZ,C
+;
+cp	macro	F,R
+	movf	R,w
+	subwf	F,w
+	endm
+
+; Skok na adr. A ak Z
+;
+jz	macro	A
+	btfsc	STATUS,Z		;Ak Z=0 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Skok na adr. A ak NZ
+;
+jnz	macro	A
+	btfss	STATUS,Z		;Ak Z=1 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Skok na adr. A ak C
+;
+jc	macro	A
+	btfsc	STATUS,C		;Ak C=0 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Skok na adr. A ak NC
+;
+jnc	macro	A
+	btfss	STATUS,C		;Ak C=1 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Skok na adr. A ak DC
+;
+jdc	macro	A
+	btfsc	STATUS,DC		;Ak C=0 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Skok na adr. A ak NDC
+;
+jndc	macro	A
+	btfss	STATUS,DC		;Ak C=1 preskok
+	goto	A		;Inak skok na adr. A
+	endm
+;
+; Naplnenie registra F hodnotou A
+;
+movlf	macro	F,A
+	movlw	A
+	movwf	F
+	endm
+;
+; Naplnenie registra F hodnotou registra N
+;
+mov	macro	F,N
+	movf	N,w
+	movwf	F
+	endm
+;
+; Vzajomna vymena registrov
+;
+ex	macro	F,N
+	movf	F,w
+	xorwf	N,w
+	xorwf	F
+	xorwf	N
+	endm
+;
+; Preskok ak Z
+;
+sz	macro
+	btfss	STATUS,Z
+	endm
+;
+; Preskok ak NZ
+;
+snz	macro
+	btfsc	STATUS,Z
+	endm
+;
+; Preskok ak C
+;
+sc	macro
+	btfss	STATUS,C
+	endm
+;
+; Preskok ak NC
+;
+snc	macro
+	btfsc	STATUS,C
+	endm
+;
+; Preskok ak DC
+;
+sdc	macro
+	btfss	STATUS,DC
+	endm
+;
+; Preskok ak NDC
+;
+sndc	macro
+	btfsc	STATUS,DC
+	endm
+;
+;*****
+;
+; Skoc ak je bit FILE.B=1 na adresu ADR
+;
+jb	macro	FILE,B,ADR
+	btfsc	FILE,B
+	goto 	ADR
+	endm
+;
+;*****
+;
+; Skoc ak je bit FILE.B=0 na adresu ADR
+;
+jnb	macro	FILE,B,ADR
+	btfss	FILE,B
+	goto 	ADR
+	endm
+;
+;*****
+;
+; Odcitaj 1 od F a ak nie je = 0 skok
+;
+djnz	macro	F,ADR
+	decfsz	F,f
+	goto	ADR
+	endm
+;
+;*****
+;
+; Nastav stranku 0 [16c56/57]
+;
+page_0	macro	
+	bcf	STATUS,PA0
+	endm
+;
+; Nastav stranku 1 [16c56/57]
+;
+page_1	macro	
+	bsf	STATUS,PA0
+	endm
+;
+; Nastav dvojstranku 0 [16c57]
+;
+page_d0	macro	
+	bcf	STATUS,PA1
+	endm
+;
+; Nastav dvojstranku 1 [16c57]
+;
+page_d1	macro	
+	bsf	STATUS,PA1
+	endm
+;
+; Uplna volba stranok PIC16C57
+;
+page0	macro	
+	bcf	STATUS,PA0
+	bcf	STATUS,PA1
+	endm
+;
+page1	macro	
+	bsf	STATUS,PA0
+	bcf	STATUS,PA1
+	endm
+;
+page2	macro	
+	bcf	STATUS,PA0
+	bsf	STATUS,PA1
+	endm
+;
+page3	macro	
+	bsf	STATUS,PA0
+	bsf	STATUS,PA1
+	endm
+;
+;*****
+;
+; Praca z bankami registrov u PIC16C57
+;
+; Nastav BANKU registrov 0 - nastavuje Z !
+;
+sbank_0	macro
+	clrf	FSR
+	endm
+;
+; Nastav BANKU registrov 0 (Ak sa pouziva len 0 a 1)
+;
+bank_0	macro
+	bcf	FSR,5
+	endm
+;
+; Nastav BANKU registrov 1 (Ak sa pouziva len 0 a 1)
+;
+bank_1	macro	
+	bsf	FSR,5
+	endm
+;	
+; Nastavenie BANKY 0
+;
+abank_0	macro
+	bcf	FSR,5
+	bcf	FSR,6
+	endm
+;
+; Nastavenie BANKY 1
+;
+abank_1	macro
+	bsf	FSR,5
+	bcf	FSR,6
+	endm
+;
+; Nastavenie BANKY 2
+;
+abank_2	macro
+	bcf	FSR,5
+	bsf	FSR,6
+	endm
+;
+; Nastavenie BANKY 3
+;
+abank_3	macro
+	bsf	FSR,5
+	bsf	FSR,6
+	endm
+;
+

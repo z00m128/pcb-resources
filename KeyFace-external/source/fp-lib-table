@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name zx-spectrum)(type KiCad)(uri ${KIPRJMOD}/zx-spectrum.pretty)(options "")(descr ""))
+)

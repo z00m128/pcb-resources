@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name keyface-external)(type Legacy)(uri ${KIPRJMOD}/keyface-external.lib)(options "")(descr ""))
+  (lib (name zx-spectrum)(type Legacy)(uri ${KIPRJMOD}/zx-spectrum.lib)(options "")(descr ""))
+)

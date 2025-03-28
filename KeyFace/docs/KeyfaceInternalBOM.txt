@@ -1,0 +1,16 @@
+C1               1  100uF                 Polarized capacitor, radial, 6.3mm x 2.5mm
+C2,C3            2  47p                   Unpolarized capacitor, disc, 3 mm x 2mm x 2.5mm
+C4,C5            2  100n                  Unpolarized capacitor, disc, 4.3 mm x 1.9mm x 5mm
+C6,C7            2  33p                   Unpolarized capacitor, disc, 3 mm x 2mm x 2.5mm
+D1,D2,D3,D4      4  BAT42                 Diode schottky, DO-35
+IC1              1  PIC16C56 or PIC16F84  Micro controller, DIP 18
+IC2,IC3          2  MHB8804               Analog switching array, DIP 24W
+IC4              1  74HCT125              Quad buffer 3-State outputs, DIP 14
+IC5              1  74HCT32               Quad 2-input OR, DIP 14
+Q1               1  4 MHz                 Two pin crystal, HC49U (H49S), THT
+R11,R12,R13      3  560R                  Resistor 0.25W, small, THT
+R21,R22,R23,R24  4  10k                   Resistor 0.25W, small, THT
+R31,R32,R33,R34  8  4k7                   Resistor 0.25W, small, THT
+R35,R36,R37,R38  
+T1,T2            1  BC547                 0.1A Ic, 45V Vce, Small Signal NPN Transistor, TO-92
+K1               1  Conn_02x13_Odd_Even   Generic connector, double row, 2x13, 2.54 mm raster

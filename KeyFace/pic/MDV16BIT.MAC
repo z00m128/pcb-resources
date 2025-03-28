@@ -1,0 +1,323 @@
+	LIST
+;***** Makra z LIB16
+	NOLIST
+;
+; Naplnenie 16bit cisla - naplni bunky R(LSB), R+1(MSB) cislom N
+;
+movlx	macro	R,N
+
+	movlw	(N)>>8&0xff
+	movwf	1+R
+	movlw	(N)&0xff
+	movwf	R
+
+	endm
+;
+;*****
+;
+; MOVE pre 16 bit cislo - naplni F datami z N
+;
+movx	macro	F,N
+
+	movf	N,w
+	movwf	F
+	movf	1+N,w
+	movwf	1+F
+
+	endm
+;
+;*****
+;
+; Vymena dvoch 16 bit cisel. F<->N
+;
+ex_x	macro	F,N
+
+	movf	F,w
+	xorwf	N,w
+	xorwf	N,f
+	xorwf	F,f
+
+	movf	1+F,w
+	xorwf	1+N,w
+	xorwf	1+N,f
+	xorwf	1+F,f
+	
+	endm	
+;
+;*****
+;
+; Porovnanie 16 bit reg F s reg N
+; F=N   Z,C
+; F<N	NZ,NC
+; F>N	NZ,C
+;
+cpx	macro	F,N
+	local	cpx0
+
+	movf	1+N,w
+	subwf	1+F,w
+	btfss	STATUS,Z	;Ak Z preskok
+	goto	cpx0		;Inak koniec
+	movf	N,w
+	subwf	F,w
+cpx0
+	endm
+;
+;*****
+;
+; Porovnanie 16 bit reg F s cislom N
+; F=N   Z,C
+; F<N	NZ,NC
+; F>N	NZ,C
+;
+cpix	macro	F,N
+
+	local	cpix0
+	movlw	(N)>>8&0xff
+	subwf	1+F,w
+	btfss	STATUS,Z		;Ak Z preskok
+	goto	cpix0		;Inak koniec
+	movlw	(N)&0xff
+	subwf	F,w
+cpix0
+	endm
+;
+;*****
+;
+; Test 16 bit reg F na nulu - minimalna dlzka
+;
+; F=0  Z
+; F<>0 NZ
+;
+cp0x	macro	F
+	movf	F,w
+	iorwf	1+F,w	
+	endm
+;
+;*****
+;
+; Test 16 bit reg F na nulu - nemeni W
+;
+; F=0  Z
+; F<>0 NZ
+;
+cp0xn	macro	F
+	movf	F,f
+	btfsc	STATUS,Z
+	movf	1+F,f
+	endm
+;
+;*****
+;
+; Porovnanie 16 bit reg F s reg N pre kodovanie v doplnkovom kode
+; F=N   Z,C
+; F<N	NZ,NC
+; F>N	NZ,C
+;
+cpdx	macro	F,N
+	local	cpdx0,cpdx1
+
+	movf	1+F,w		;Zisti ci su rovnake znamienka
+	xorwf	1+N,w
+	andlw	0x80		;Naska znamienok (0=rovnake, 1=rozne)
+	btfsc	STATUS,Z		;Ak rozne znamienka preskok
+	goto	cpdx0		;Inak porovnaj
+	bcf	STATUS,C		;Priznak F<N
+	btfss	1+F,MSB		;Ak F<0 preskok	
+	bsf	STATUS,C		;Priznak F>N
+	goto	cpdx1
+
+cpdx0	movf	1+N,w
+	subwf	1+F,w
+	btfss	STATUS,Z		;Ak Z preskok
+	goto	cpdx1		;Inak koniec
+	movf	N,w
+	subwf	F,w
+cpdx1
+	endm
+;
+;*****
+;
+; Nulovanie 16 bit cisla
+;
+clrx	macro	F
+
+	clrf	F
+	clrf	1+F
+
+	endm
+;
+;*****
+;
+; Pricitanie 1 k 16 bit cislu
+; Z=1 Vysledok je 0
+;
+incx	macro	F
+
+	incf	F,f
+	btfsc	STATUS,Z		;Ak NZ preskok
+	incf	1+F,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 1 od 16 bit cisla
+;
+decx	macro	F
+	movf	F,f
+	btfsc	STATUS,Z		;Ak NZ preskok
+	decf	1+F,f
+	decf	F,f
+	endm
+;
+;*****
+;
+; Scitanie 16 bit cisel B=B+A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+addx	macro	B,A
+
+	movf	A,w
+	addwf	B,f
+	movf	1+A,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	1+A,w			;N_H+1 do W, Ak pretiekokl preskok
+	addwf	1+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 16 bit cisel B=B-A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+subx	macro	B,A
+
+	movf	A,w
+	subwf	B,f
+	movf	1+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	1+A,w
+	subwf	1+B,f
+
+	endm
+;
+;*****
+;
+; Scitanie 16 bit cisel B=B+(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+1 !
+;
+iaddx	macro	B
+
+	movf	INDF,w
+	addwf	B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+
+	movf	INDF,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	INDF,w			;N_H+1 do W, Ak pretiekokl preskok
+	addwf	1+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 16 bit cisel B=B-(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+1 !
+;
+isubx	macro	B,A
+
+	movf	INDF,w
+	subwf	B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+	
+	movf	INDF,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	INDF,w
+	subwf	1+B,f
+
+	endm
+;
+;*****
+;
+; Scitanie 16 bit cisla s N, F=F+N
+;
+; ! CY nema informacnu hodnotu !
+;
+addix	macro	F,N
+
+	movlw	(N)&0xff
+	addwf	F,f
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incf	1+F,f
+	movlw	(N)>>8&0xff
+	addwf	1+F,f
+
+	endm
+;
+;*****
+;
+; Odcitanie N od 16 bit cisla F , F=F-N
+;
+; ! CY nema informacnu hodnotu !
+;
+subix	macro	F,N
+
+	movlw	(N)&0xff
+	subwf	F,f
+	btfss	STATUS,C		;Ak C=1 preskok
+	decf	1+F,f
+	movlw	(N)>>8&0xff
+	subwf	1+F,f
+
+	endm
+;
+;*****
+;
+; Vytvorenie doplnku 16 bit cisla F
+;
+negx	macro	F
+
+	comf	F,f
+	incf	F,f
+	btfsc	STATUS,Z		;Ak Z=0	preskok 
+	decf	1+F,f
+	comf	1+F,f
+
+	endm
+;
+;*****
+;
+; Rotacia 16 cisla vlavo
+;
+rlx	macro	F
+
+	rlf 	F,f
+	rlf	1+F,f
+
+	endm
+;
+;*****
+;
+; Rotacia 16 cisla vpravo
+;
+rrx	macro	F
+
+	rrf 	1+F,f
+	rrf	F,f
+
+	endm
+;
+;*****
+;
+	LIST
+

@@ -1,0 +1,432 @@
+	LIST
+;***** Makra pre 16, 24 a 32 bit aritmetiku
+	NOLIST
+;
+;*********************************
+; 24 bit - aritmeticke funkcie (Y)
+;*********************************
+;
+; Nulovanie 24 bit cisla
+;
+clry	macro	R
+
+	clrf	R
+	clrf	1+R
+	clrf	2+R
+
+	endm
+;
+;*****
+;
+; MOVE pre 24 bit cislo - naplni F datami z N
+;
+movy	macro	R,N
+
+	movf	N,w
+	movwf	R
+	movf	1+N,w
+	movwf	1+R
+	movf	2+N,w
+	movwf	2+R
+
+	endm
+;
+;*****
+;
+; Test 24 bit cisla R na nulu
+; F=0   Z
+; F<>0	NZ
+;
+cp0y	macro	R
+
+	movf	R,f
+	btfsc	STATUS,Z		;Ak NZ preskok
+	movf	1+R,f
+	btfsc	STATUS,Z		;Ak NZ preskok
+	movf	2+R,f
+
+	endm
+;
+;*****
+;
+; Pricitanie 16 bit cisla N k 24 bit cislu R, R=R+N
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+addyx	macro	R,N
+
+	movf	N,w
+	addwf	R,f
+	movf	1+N,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	1+N,w			;N_H+1 do W, Ak pretiekokl preskok
+	addwf	1+R,f	
+	movlw	0
+	btfsc	STATUS,C		;Ak C=0 preskok
+	movlw	1			;Inak pricitaj 1
+	addwf	2+R,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 16 bit cisla A od 24 bit cisla B, B=B-A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+subyx	macro	B,A
+
+	movf	A,w
+	subwf	B,f
+	movf	1+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	1+A,w
+	subwf	1+B,f
+	movlw	0
+	btfss	STATUS,C		;Ak nebola pozicka preskok
+	movlw	1
+	subwf	2+B,f
+
+	endm
+;	
+;*****
+;
+; Scitanie 24 bit cisel A a B, B=B+A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+2 !
+;
+addy	macro	B,A
+	
+	movf	A,w
+	addwf	B,f
+	movf	1+A,w
+	btfss	STATUS,C		;Ak C=0 preskok (bez prenosu)
+	incfsz	1+A,w
+	addwf	1+B,f
+	movf	2+A,w
+	btfss	STATUS,C		;Ak C=0 preskok (bez prenosu)
+	incfsz	2+A,w
+	addwf	2+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 24 bit cisel A a B, B=B-A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+suby	macro	B,A
+
+	movf	A,w
+	subwf	B,f
+	movf	1+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	1+A,w
+	subwf	1+B,f
+	movf	2+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	2+A,w
+	subwf	2+B,f
+
+	endm
+;	
+;*****
+;
+; Scitanie 24 bit cisla od FSR s 24 bit B, B=B+(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+2 !
+;
+iaddy	macro	B
+	
+	movf	INDF,w
+	addwf	B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+	
+	movf	INDF,w
+	btfsc	STATUS,C		;Ak C=0 preskok (bez prenosu)
+	incfsz	INDF,w
+	addwf	1+B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+	
+	movf	INDF,w
+	btfsc	STATUS,C		;Ak C=0 preskok (bez prenosu)
+	incfsz	INDF,w
+	addwf	2+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 24 bit cisla od FSR od 24 bit cisla B, B=B-(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+2 !
+;
+isuby	macro	B
+
+	movf	INDF,w
+	subwf	B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+
+	movf	INDF,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	INDF,w
+	subwf	1+B,f
+	incf	FSR,f			;Ukazovatel na vyssi
+
+	movf	INDF,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	INDF,w
+	subwf	2+B,f
+
+	endm
+;	
+;*****
+;
+; Vytvorenie doplnku 24 bit cisla R
+; ! NICI W !
+;
+negy	macro	R
+
+	movlw	1
+	comf	R,f
+	addwf	R,f		
+
+	comf	1+R,f
+	btfsc	STATUS,C	;Ak NC preskok
+	addwf	1+R,f		;Inak pricitaj prenos
+
+	comf	2+R,f
+	btfsc	STATUS,C	;Ak NC preskok
+	addwf	2+R,f		;Inak pricitaj prenos
+
+	endm
+;
+;*****
+;
+; Pricitanie 1 k 24 bit cislu R
+;
+incy	macro	R
+	
+	incf	R,f
+	btfsc	STATUS,Z	;Ak NZ preskok
+	incf	1+R,f		;Inak pricitaj prenos
+	btfsc	STATUS,Z	;Ak NZ preskok
+	incf	2+R,f		;Inak pricitaj prenos
+
+	endm
+;
+;*****
+;
+; Odcitanie 1 od 24 bit cisla R
+; ! NICI W !
+;
+decy	macro	R
+
+	movlw	1		;Odcitaj 1
+	subwf	R,f		
+	btfss	STATUS,C	;Ak bez pozicky preskok
+	subwf	1+R,f		;Inak odcitaj pozicku
+	btfss	STATUS,C	;Ak bez pozicky preskok
+	subwf	2+R,f		;Inak odcitaj pozicku
+
+	endm
+;
+;*****
+;
+; Rotacia 24bit cisla vlavo
+;
+rly	macro	R
+
+	rlf 	R,f
+	rlf	1+R,f
+	rlf	2+R,f
+
+	endm
+;
+;*****
+;
+; Rotacia 24bit cisla vpravo
+;
+rry	macro	R
+
+	rrf	2+R,f
+	rrf 	1+R,f
+	rrf	R,f
+
+	endm
+;
+;*********************************
+; 32 bit - aritmeticke funkcie (Y)
+;*********************************
+;
+; Nulovanie 32 bit cisla
+;
+clrq	macro	R
+
+	clrf	R
+	clrf	1+R
+	clrf	2+R
+	clrf	3+R
+
+	endm
+;
+;*****
+;
+; Pricitanie 24 bit cisla A k 32 bit cislu B, B=B+A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+addqy	macro	B,A
+
+	movf	A,w
+	addwf	B,f
+
+	movf	1+A,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	1+A,w			;N_H+1 do W, Ak pretiekokl preskok
+	addwf	1+B,f	
+
+	movf	2+A,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	2+A,w			;N_HH+1 do W, Ak pretiekokl preskok
+	addwf	2+B,f	
+
+	movlw	0
+	btfsc	STATUS,C		;Ak C=0 preskok
+	movlw	1			;Inak pricitaj 1
+	addwf	3+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 24 bit cisla A od 32 bit cisla B, B=B-A
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+subqy	macro	B,A
+
+	movf	A,w
+	subwf	B,f
+
+	movf	1+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	1+A,w
+	subwf	1+B,f
+
+	movf	2+A,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	2+A,w
+	subwf	2+B,f
+
+	movlw	0
+	btfss	STATUS,C		;Ak nebola pozicka preskok
+	movlw	1
+	subwf	3+B,f
+
+	endm
+;	
+;*****
+;
+; Pricitanie 24 bit cisla od FSR k 32 bit cislu B, B=B+(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+2 !
+;
+iaddqy	macro	B
+
+	movf	INDF,w
+	addwf	B,f
+
+	incf	FSR,f			;Ukazovatel na vyssi bajt
+	movf	INDF,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	INDF,w
+	addwf	1+B,f	
+
+	incf	FSR,f
+	movf	INDF,w
+	btfsc	STATUS,C		;Ak C=0 preskok
+	incfsz	INDF,w			;N_HH+1 do W, Ak pretiekokl preskok
+	addwf	2+B,f	
+
+	movlw	0
+	btfsc	STATUS,C		;Ak C=0 preskok
+	movlw	1			;Inak pricitaj 1
+	addwf	3+B,f
+
+	endm
+;
+;*****
+;
+; Odcitanie 24 bit cisla od FSR od 32 bit cisla B, B=B-(FSR)
+;
+; CY funguje korektne !! (c) JURO'96 
+;
+; Na konci je FSR=FSR+2 !
+;
+isubqy	macro	B
+
+	movf	INDF,w
+	subwf	B,f
+
+	incf	FSR,f
+	movf	INDF,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	INDF,w
+	subwf	1+B,f
+
+	incf	FSR,f
+	movf	INDF,w
+	btfss	STATUS,C		;Ak C=1 preskok (bez prenosu)
+	incfsz	INDF,w
+	subwf	2+B,f
+
+	movlw	0
+	btfss	STATUS,C		;Ak nebola pozicka preskok
+	movlw	1
+	subwf	3+B,f
+
+	endm
+;	
+;*****
+;
+; Vytvorenie doplnku 32 bit cisla R
+; ! NICI W !
+;
+negq	macro	R
+
+	movlw	1
+	comf	R,f
+	addwf	R,f		
+
+	comf	1+R,f
+	btfsc	STATUS,C	;Ak NC preskok
+	addwf	1+R,f		;Inak pricitaj prenos
+
+	comf	2+R,f
+	btfsc	STATUS,C	;Ak NC preskok
+	addwf	2+R,f		;Inak pricitaj prenos
+
+	comf	3+R,f
+	btfsc	STATUS,C	;Ak NC preskok
+	addwf	3+R,f		;Inak pricitaj prenos
+
+	endm
+;
+;*****
+;
+
+;
+;*****
+;
+	LIST
+
