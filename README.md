@@ -1,6 +1,10 @@
 # My PCB library 
 Here is the set of printed circuit boards created by me over a time. I used mostly KiCad (PCBs created from scratch) or Sprint-Layout 6.0 (PCBs recreated from scans or photos).
 
+## [ZX Spectrum 128k replica _(WORK IN PROGRESS)_](https://github.com/z00m128/pcb-resources/tree/main/Toastrack)
+Recreated PCB of ZX Spectrum 128k. I felt sorry for the Toastrack owner who contacted me with a repair request and who fell victim to eBay fraud, so I decided to make a replica.
+![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_top.png)
+
 ## [ZX Cherry Keyboard _(WORK IN PROGRESS_)](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/)
 Another iteration of a mechanical keyboard for the ZX Spectrum. This time my own, designed for one of my projects.
 ![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-cherry-kb_top.png)
