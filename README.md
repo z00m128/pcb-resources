@@ -1,6 +1,10 @@
 # My PCB library 
 Here is the set of printed circuit boards created by me over a time. I used mostly KiCad (PCBs created from scratch) or Sprint-Layout 6.0 (PCBs recreated from scans or photos).
 
+## [ZX Cherry Keyboard _(WORK IN PROGRESS_)](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/)
+Another iteration of a mechanical keyboard for the ZX Spectrum. This time my own, designed for one of my projects.
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-cherry-kb_top.png)
+
 ## [Didaktik M'92](https://github.com/z00m128/pcb-resources/tree/main/Didaktik-M-92)
 A clone of the ZX Spectrum computer manufactured by the Slovak company Didaktik v.d. in the early 1990s. The recreated PCB has been verified and is functional.
 ![](https://github.com/z00m128/pcb-resources/blob/main/Didaktik-M-92/Didaktik-M-92-top.png)
