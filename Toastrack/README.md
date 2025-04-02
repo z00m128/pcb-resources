@@ -4,10 +4,10 @@ Three people have contacted me independently asking for a fix for a broken Toast
 The redraw is complete, but I'm leaving some time for it to be checked again and the first verification board to be made. I don't know when yet, but it's planned as soon as possible.
 
 ## Top layer
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_top.png)
 
 ## Bottom layer
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_bottom.png)
 
 ## X-ray
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_xray.png)
