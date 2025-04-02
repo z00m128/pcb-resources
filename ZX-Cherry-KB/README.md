@@ -7,10 +7,10 @@ Due to the hard-to-find 4.5u spacebar, the key layout has been changed to the ea
 It is not finished or tested yet, but I plan to do so soon.
 
 ## Top Layer
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-cherry-kb_top.png)
 
 ## Bottom Layer
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-cherry-kb_bottom.png)
 
 ## Custom Layout
-![]()
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-keyboard-layout.png)
