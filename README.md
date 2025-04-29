@@ -5,8 +5,8 @@ Here is the set of printed circuit boards created by me over a time. I used most
 Recreated PCB of ZX Spectrum 128k. I felt sorry for the Toastrack owner who contacted me with a repair request and who fell victim to eBay fraud, so I decided to make a replica.
 ![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_top.png)
 
-## [ZX Cherry Keyboard _(WORK IN PROGRESS_)](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/)
-Another iteration of a mechanical keyboard for the ZX Spectrum. This time my own, designed for one of my projects.
+## [ZX Cherry Keyboard](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/)
+Another iteration of a mechanical keyboard for the ZX Spectrum. This time my own, designed for one of my projects, but it is compatible with +2/+3 case.
 ![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-cherry-kb_top.png)
 
 ## [Didaktik M'92](https://github.com/z00m128/pcb-resources/tree/main/Didaktik-M-92)
