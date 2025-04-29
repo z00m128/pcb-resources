@@ -1,7 +1,7 @@
 # My PCB library 
 Here is the set of printed circuit boards created by me over a time. I used mostly KiCad (PCBs created from scratch) or Sprint-Layout 6.0 (PCBs recreated from scans or photos).
 
-## [ZX Spectrum 128k replica _(WORK IN PROGRESS)_](https://github.com/z00m128/pcb-resources/tree/main/Toastrack)
+## [ZX Spectrum 128k replica](https://github.com/z00m128/pcb-resources/tree/main/Toastrack)
 Recreated PCB of ZX Spectrum 128k. I felt sorry for the Toastrack owner who contacted me with a repair request and who fell victim to eBay fraud, so I decided to make a replica.
 ![](https://github.com/z00m128/pcb-resources/blob/main/Toastrack/ZXS128k_top.png)
 
