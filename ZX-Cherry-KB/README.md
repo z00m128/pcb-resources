@@ -15,4 +15,7 @@ With [these](https://www.thingiverse.com/thing:4978541) keycaps it fits nicely t
 ## Custom Layout
 ![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/zx-keyboard-layout.png)
 
-
+## Prototype pictures
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/pics/zx-cherry-kb-testing.jpg)
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/pics/zx-cherry-kb-plus2-case.jpg)
+![](https://github.com/z00m128/pcb-resources/blob/main/ZX-Cherry-KB/pics/zx-cherry-kb-plus2-case-detail.jpg)
